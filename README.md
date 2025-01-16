@@ -1,63 +1,140 @@
-# Budget Planner Application
+# 💰 Budget Planner Application
 
-A personal budget planning application built with React and Node.js.
+A modern web application for managing personal finances, built with React, Node.js, Express.js, and MySQL.
 
-## Setup Instructions
+## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js (v18.x)
-- npm (v9.x)
-- MySQL (v8.x)
 
-### Database Setup
-1. Install MySQL on your system
-2. Create a new database:
-```sql
-CREATE DATABASE budget_planner;
-```
+Before you begin, ensure you have the following installed on your machine:
 
-### Project Setup
-1. Clone the repository
-2. Install dependencies:
-```bash
-npm install
-```
+1. Node.js (v18 or higher) - [Download here](https://nodejs.org/)
+2. MySQL (v8 or higher) - [Download here](https://dev.mysql.com/downloads/)
+3. Git - [Download here](https://git-scm.com/downloads)
 
-3. Configure environment variables:
-```bash
-cd server
-cp .env.example .env
-```
-Then edit `.env` with your MySQL credentials
+### Installation Steps
 
-4. Initialize the database:
-```bash
-node config/reset.js
-```
+1. **Clone the repository**
+   ```bash
+   git clone [repository-url]
+   cd budget-planner
+   ```
+
+2. **Install dependencies**
+   ```bash
+   # Install root dependencies
+   npm install
+
+   # Install client dependencies
+   cd client
+   npm install
+
+   # Install server dependencies
+   cd ../server
+   npm install
+   ```
+
+3. **Set up MySQL**
+   - Start MySQL service:
+     - On macOS: `brew services start mysql`
+     - On Windows: Start MySQL from Services
+     - On Linux: `sudo systemctl start mysql`
+   
+   - Create a new database:
+   ```bash
+   mysql -u root
+   CREATE DATABASE budget_planner;
+   exit;
+   ```
+
+4. **Configure environment variables**
+   - In the server directory, create a `.env` file:
+   ```env
+   NODE_ENV=development
+   PORT=3002
+   JWT_SECRET=your_jwt_secret_here
+   DB_HOST=localhost
+   DB_USER=root
+   DB_NAME=budget_planner
+   # DB_PASSWORD= (leave empty if no password set)
+   ```
+
+5. **Initialize the database**
+   ```bash
+   # From the server directory
+   node config/reset.js
+   ```
 
 ### Running the Application
-1. Start the backend server:
-```bash
-npm run dev:server
+
+1. **Start the backend server**
+   ```bash
+   # From the root directory
+   npm run dev:server
+   ```
+   The server will start on http://localhost:3002
+
+2. **Start the frontend development server**
+   ```bash
+   # In a new terminal, from the root directory
+   npm run dev:client
+   ```
+   The application will open in your browser at http://localhost:5173
+
+## 🎯 Features
+
+- 👤 User authentication (register/login)
+- 💹 Budget tracking and management
+- 📊 Transaction history
+- 🏷️ Custom budget categories
+- 📱 Responsive design
+
+## 🔧 Troubleshooting
+
+1. **Port already in use**
+   ```bash
+   # Kill the process using port 3002
+   lsof -i :3002
+   kill -9 [PID]
+   ```
+
+2. **MySQL Connection Issues**
+   - Ensure MySQL service is running
+   - Verify database name and credentials in `.env`
+   - Check if database exists: `mysql -u root -e "SHOW DATABASES;"`
+
+3. **Node.js Version Mismatch**
+   - Use `nvm` (Node Version Manager) to switch to the correct version:
+   ```bash
+   nvm install 18
+   nvm use 18
+   ```
+
+## 📁 Project Structure
+
+```
+budget-planner/
+├── client/                 # Frontend React application
+│   ├── src/
+│   │   ├── components/    # React components
+│   │   ├── context/      # Context providers
+│   │   └── api/          # API integration
+│   └── package.json
+├── server/                # Backend Node.js application
+│   ├── controllers/      # Business logic
+│   ├── routes/          # API routes
+│   ├── middleware/      # Custom middleware
+│   ├── config/         # Configuration files including reset.js
+│   └── package.json
+└── package.json
 ```
 
-2. In a new terminal, start the frontend:
-```bash
-npm run dev:client
-```
+## 🤝 Contributing
 
-The application will be available at:
-- Frontend: http://localhost:3000
-- Backend: http://localhost:3001
+1. Create a new branch for your feature
+2. Make your changes
+3. Test thoroughly
+4. Create a pull request with a clear description
 
-## Development
-
-- Frontend code is in the `client` directory
-- Backend code is in the `server` directory
-- Database configuration is in `server/config`
-
-## Contributing
-1. Create your feature branch (`git checkout -b feature/amazing-feature`)
-2. Commit your changes (`git commit -m 'Add some amazing feature'`)
-3. Push to the branch (`git push origin feature/amazing-feature`)
-4. Open a Pull Request 
+---
+Happy budgeting! 🎉 
