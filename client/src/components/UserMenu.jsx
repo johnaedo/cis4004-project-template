@@ -53,7 +53,7 @@ const UserMenu = () => {
         <div className="absolute right-0 mt-2 w-56 rounded-lg shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100">
           <div className="py-1">
             <button
-              onClick={() => handleNavigation("/dashboard")}
+              onClick={() => handleNavigation("/")}
               className="group flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-700"
             >
               <svg className="mr-3 h-5 w-5 text-gray-400 group-hover:text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
