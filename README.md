@@ -2,6 +2,33 @@
 
 A modern web application for managing personal finances, built with React, Node.js, Express.js, and MySQL.
 
+## Technical Stack
+
+### Frontend
+- Framework: React.js
+- HTTP Server: Create React App development server
+  - Runs on port 3000
+  - Handles frontend routing
+  - Serves React components
+
+### Backend
+- HTTP Server: Node.js
+- Framework: Express.js
+  - Runs on port 5000
+  - Handles API requests
+  - Manages database connections
+
+### Database
+- MySQL
+  - Stores application data
+  - Manages user information
+
+### External APIs/Services
+- None currently
+
+### Authentication
+- Session-based authentication with Express
+
 ## 🚀 Getting Started
 
 ### Prerequisites
