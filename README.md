@@ -4,6 +4,8 @@ A modern web application for managing personal finances, built with React, Node.
 
 ## Technical Stack
 
+![Screenshot 2025-02-15 at 2 11 07 AM](https://github.com/user-attachments/assets/06beb594-c5d2-45cf-b85f-120d037b8f89)
+
 ### Frontend
 - Framework: React.js with Vite
   - Runs on port 5173 (Vite's default port)
@@ -33,9 +35,6 @@ A modern web application for managing personal finances, built with React, Node.
   - 24-hour token expiration
   - Secure password hashing with bcrypt
   - Protected routes with middleware
-
-![Screenshot 2025-02-15 at 2 11 07 AM](https://github.com/user-attachments/assets/06beb594-c5d2-45cf-b85f-120d037b8f89)
-
 
 ## 🚀 Getting Started
 
