@@ -34,6 +34,8 @@ A modern web application for managing personal finances, built with React, Node.
   - Secure password hashing with bcrypt
   - Protected routes with middleware
 
+![Screenshot 2025-02-15 at 2 11 07 AM](https://github.com/user-attachments/assets/06beb594-c5d2-45cf-b85f-120d037b8f89)
+
 
 ## 🚀 Getting Started
 
