@@ -5,29 +5,35 @@ A modern web application for managing personal finances, built with React, Node.
 ## Technical Stack
 
 ### Frontend
-- Framework: React.js
-- HTTP Server: Create React App development server
-  - Runs on port 3000
-  - Handles frontend routing
-  - Serves React components
+- Framework: React.js with Vite
+  - Runs on port 5173 (Vite's default port)
+  - Uses React Router for client-side routing
+  - Styled with Tailwind CSS
+  - State management with React Query
 
 ### Backend
 - HTTP Server: Node.js
 - Framework: Express.js
-  - Runs on port 5000
-  - Handles API requests
+  - Runs on port 3002
+  - RESTful API endpoints
   - Manages database connections
+  - CORS enabled for development/production
 
 ### Database
 - MySQL
-  - Stores application data
-  - Manages user information
+  - Stores user data, transactions, budgets, and categories
+  - Uses connection pooling for efficient database access
+  - Structured with foreign key relationships
 
 ### External APIs/Services
 - None currently
 
 ### Authentication
-- Session-based authentication with Express
+- JWT (JSON Web Token) based authentication
+  - 24-hour token expiration
+  - Secure password hashing with bcrypt
+  - Protected routes with middleware
+
 
 ## 🚀 Getting Started
 
