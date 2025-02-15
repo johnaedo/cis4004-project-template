@@ -4,7 +4,7 @@ A modern web application for managing personal finances, built with React, Node.
 
 ## Technical Stack
 
-![Screenshot 2025-02-15 at 2 12 22 AM](https://github.com/user-attachments/assets/25ae1654-b5e1-4676-adbe-755a99974d32)
+![Screenshot 2025-02-15 at 2 12 52 AM](https://github.com/user-attachments/assets/132de664-3e6f-4ccb-973f-2baa8d335052)
 
 ### Frontend
 - Framework: React.js with Vite
