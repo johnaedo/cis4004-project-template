@@ -137,7 +137,7 @@ const BudgetDashboard = () => {
               <div key={budget.id} className="space-y-3">
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-3">
-                    <HealthIcon className={`w-5 h-5 ${health.color}`} />
+                    <div className="w-5 h-5 rounded-full" style={{ backgroundColor: budget.category_color }} />
                     <span className="font-medium">{budget.category_name}</span>
                   </div>
                   <div className="text-right">
@@ -149,13 +149,12 @@ const BudgetDashboard = () => {
                 </div>
                 <div className="w-full bg-gray-100 rounded-full h-3">
                   <div
-                    className={`h-3 rounded-full transition-all duration-500 ${
-                      budget.status === 'over' ? 'bg-red-500' :
-                      budget.status === 'warning' ? 'bg-yellow-400' :
-                      'bg-green-500'
-                    }`}
+                    className="h-3 rounded-full transition-all duration-500"
                     style={{
-                      width: `${Math.min((budget.spent_amount / budget.budget_amount) * 100, 100)}%`
+                      width: `${Math.min((budget.spent_amount / budget.budget_amount) * 100, 100)}%`,
+                      backgroundColor: budget.status === 'over' ? '#ef4444' : 
+                                     budget.status === 'warning' ? '#f59e0b' : 
+                                     budget.category_color
                     }}
                   ></div>
                 </div>
@@ -175,24 +174,30 @@ const BudgetDashboard = () => {
               className="flex justify-between items-center p-4 hover:bg-gray-50 rounded-lg transition-colors duration-150"
             >
               <div className="flex items-center gap-4">
-                <div className={`p-2 rounded-full ${
-                  transaction.type === 'income' ? 'bg-green-100' : 'bg-red-100'
-                }`}>
+                <div className="p-2 rounded-full" style={{ 
+                  backgroundColor: `${transaction.category_color}20`,
+                }}>
                   {transaction.type === 'income' ? (
-                    <ArrowUpCircle className="w-5 h-5 text-green-600" />
+                    <ArrowUpCircle className="w-5 h-5" style={{ color: transaction.category_color }} />
                   ) : (
-                    <ArrowDownCircle className="w-5 h-5 text-red-600" />
+                    <ArrowDownCircle className="w-5 h-5" style={{ color: transaction.category_color }} />
                   )}
                 </div>
                 <div>
                   <p className="font-medium text-gray-900">{transaction.description}</p>
-                  <p className="text-sm text-gray-500">{transaction.category_name}</p>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full" style={{ backgroundColor: transaction.category_color }} />
+                    <p className="text-sm text-gray-500">{transaction.category_name}</p>
+                  </div>
                 </div>
               </div>
-              <div className={`font-medium ${
-                transaction.type === 'income' ? 'text-green-600' : 'text-red-600'
-              }`}>
-                {transaction.type === 'income' ? '+' : '-'}${Math.abs(transaction.amount).toFixed(2)}
+              <div className={`flex items-center gap-2 font-medium`}>
+                <div className="p-2 rounded-full" style={{ 
+                  backgroundColor: transaction.type === 'income' ? '#dcfce7' : '#fee2e2',
+                  color: transaction.type === 'income' ? '#16a34a' : '#dc2626'
+                }}>
+                  {transaction.type === 'income' ? '+' : '-'}${Math.abs(transaction.amount).toFixed(2)}
+                </div>
               </div>
             </div>
           ))}
