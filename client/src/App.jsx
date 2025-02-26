@@ -5,9 +5,11 @@ import { AuthProvider } from './context/AuthContext';
 import BudgetDashboard from './components/BudgetDashboard';
 import TransactionManager from './components/TransactionManager';
 import CategoryManager from './components/CategoryManager';
+import BudgetManager from './components/BudgetManager';
 import LoginModal from './components/LoginModal';
 import RegisterModal from './components/RegisterModal';
 import UserMenu from './components/UserMenu';
+import Footer from './components/Footer';
 import './App.css';
 
 const queryClient = new QueryClient();
@@ -33,7 +35,7 @@ const App = () => {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <Router>
-          <div className="min-h-screen bg-gray-100">
+          <div className="min-h-screen flex flex-col">
             {/* Navigation */}
             <nav className="bg-white shadow-lg">
               <div className="max-w-7xl mx-auto px-4">
@@ -61,6 +63,12 @@ const App = () => {
                       >
                         Categories
                       </Link>
+                      <Link
+                        to="/budgets"
+                        className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md"
+                      >
+                        Budgets
+                      </Link>
                     </div>
                   </div>
                   <div className="flex items-center h-full py-2">
@@ -71,7 +79,7 @@ const App = () => {
             </nav>
 
             {/* Main Content */}
-            <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+            <main className="flex-grow max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
               <Routes>
                 {/* Public Routes */}
                 <Route path="/login" element={
@@ -101,8 +109,16 @@ const App = () => {
                     <CategoryManager />
                   </PrivateRoute>
                 } />
+                <Route path="/budgets" element={
+                  <PrivateRoute>
+                    <BudgetManager />
+                  </PrivateRoute>
+                } />
               </Routes>
             </main>
+
+            {/* Footer */}
+            <Footer />
           </div>
         </Router>
       </AuthProvider>

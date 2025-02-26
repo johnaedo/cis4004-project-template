@@ -44,7 +44,7 @@ export const getTransactionSummary = (params) => api.get('/transactions/summary'
 // Budgets API
 export const getBudgets = (params) => api.get('/budgets', { params });
 export const createBudget = (budgetData) => api.post('/budgets', budgetData);
-export const updateBudget = (id, budgetData) => api.put(`/budgets/${id}`, budgetData);
+export const updateBudget = ([id, budgetData]) => api.put(`/budgets/${id}`, budgetData);
 export const deleteBudget = (id) => api.delete(`/budgets/${id}`);
 export const getBudgetSummary = (params) => api.get('/budgets/summary', { params });
 
