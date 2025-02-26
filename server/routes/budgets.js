@@ -24,21 +24,42 @@ router.get('/', authenticateToken, async (req, res) => {
 router.get('/summary', authenticateToken, async (req, res) => {
   try {
     const { startDate, endDate } = req.query;
+    
+    // Get budgets and actual spending for the period
     const [results] = await pool.query(
       `SELECT 
-         c.type,
-         SUM(b.amount) as total_budget,
-         COUNT(*) as budget_count
-       FROM budgets b
-       LEFT JOIN budget_categories c ON b.category_id = c.id
-       WHERE b.user_id = ? 
+         c.id as category_id,
+         c.name as category_name,
+         c.type as category_type,
+         c.color as category_color,
+         b.amount as budget_amount,
+         COALESCE(SUM(t.amount), 0) as spent_amount,
+         b.id
+       FROM budget_categories c
+       LEFT JOIN budgets b ON c.id = b.category_id 
+         AND b.user_id = ?
          AND b.start_date <= ? 
          AND b.end_date >= ?
-       GROUP BY c.type`,
-      [req.user.id, endDate, startDate]
+       LEFT JOIN transactions t ON c.id = t.category_id
+         AND t.user_id = ?
+         AND t.date BETWEEN ? AND ?
+       WHERE (c.user_id = ? OR c.user_id IS NULL)
+       GROUP BY c.id, c.name, c.type, c.color, b.amount, b.id
+       HAVING budget_amount IS NOT NULL`,
+      [req.user.id, endDate, startDate, req.user.id, startDate, endDate, req.user.id]
     );
-    res.json(results);
+
+    // Calculate status for each budget
+    const budgetsWithStatus = results.map(budget => ({
+      ...budget,
+      status: budget.spent_amount > budget.budget_amount ? 'over' :
+              budget.spent_amount > budget.budget_amount * 0.9 ? 'warning' :
+              'healthy'
+    }));
+
+    res.json(budgetsWithStatus);
   } catch (error) {
+    console.error('Budget summary error:', error);
     res.status(500).json({ error: error.message });
   }
 });

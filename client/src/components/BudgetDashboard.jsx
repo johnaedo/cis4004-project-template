@@ -10,15 +10,25 @@ const BudgetDashboard = () => {
 
   const { data: budgetSummary, isLoading: isLoadingBudgets } = useQuery({
     queryKey: ['budgetSummary', selectedMonth, selectedYear],
-    queryFn: () => getBudgetSummary({ month: selectedMonth, year: selectedYear })
+    queryFn: () => {
+      const lastDay = new Date(selectedYear, selectedMonth, 0).getDate();
+      return getBudgetSummary({
+        startDate: `${selectedYear}-${selectedMonth.toString().padStart(2, '0')}-01`,
+        endDate: `${selectedYear}-${selectedMonth.toString().padStart(2, '0')}-${lastDay}`
+      });
+    }
   });
 
   const { data: transactionSummary, isLoading: isLoadingTransactions } = useQuery({
     queryKey: ['transactionSummary', selectedMonth, selectedYear],
-    queryFn: () => getTransactionSummary({
-      startDate: `${selectedYear}-${selectedMonth}-01`,
-      endDate: `${selectedYear}-${selectedMonth}-31`
-    })
+    queryFn: () => {
+      // Get the last day of the selected month
+      const lastDay = new Date(selectedYear, selectedMonth, 0).getDate();
+      return getTransactionSummary({
+        startDate: `${selectedYear}-${selectedMonth.toString().padStart(2, '0')}-01`,
+        endDate: `${selectedYear}-${selectedMonth.toString().padStart(2, '0')}-${lastDay}`
+      });
+    }
   });
 
   const { data: recentTransactions, isLoading: isLoadingRecent } = useQuery({
@@ -30,8 +40,8 @@ const BudgetDashboard = () => {
     return <Spinner />;
   }
 
-  const totalIncome = transactionSummary?.find(s => s.type === 'income')?.total || 0;
-  const totalExpenses = transactionSummary?.find(s => s.type === 'expense')?.total || 0;
+  const totalIncome = Number(transactionSummary?.find(s => s.type === 'income')?.total_amount || 0);
+  const totalExpenses = Number(transactionSummary?.find(s => s.type === 'expense')?.total_amount || 0);
   const balance = totalIncome - totalExpenses;
   const savingsRate = totalIncome > 0 ? ((totalIncome - totalExpenses) / totalIncome) * 100 : 0;
 
@@ -68,7 +78,7 @@ const BudgetDashboard = () => {
             onChange={(e) => setSelectedYear(Number(e.target.value))}
             className="px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           >
-            {[2023, 2024].map(year => (
+            {Array.from({ length: 11 }, (_, i) => 2020 + i).map(year => (
               <option key={year} value={year}>{year}</option>
             ))}
           </select>

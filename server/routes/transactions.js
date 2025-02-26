@@ -26,14 +26,14 @@ router.get('/summary', authenticateToken, async (req, res) => {
     const { startDate, endDate } = req.query;
     const [results] = await pool.query(
       `SELECT 
-         c.type,
+         t.type,
          SUM(t.amount) as total_amount,
          COUNT(*) as transaction_count
        FROM transactions t
        LEFT JOIN budget_categories c ON t.category_id = c.id
        WHERE t.user_id = ? 
          AND t.date BETWEEN ? AND ?
-       GROUP BY c.type`,
+       GROUP BY t.type`,
       [req.user.id, startDate, endDate]
     );
     res.json(results);

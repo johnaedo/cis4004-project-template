@@ -66,7 +66,7 @@ const TransactionManager = () => {
     const data = {
       ...formData,
       amount: parseFloat(formData.amount),
-      categoryId: parseInt(formData.categoryId)
+      category_id: parseInt(formData.categoryId)
     };
 
     if (selectedTransaction) {
