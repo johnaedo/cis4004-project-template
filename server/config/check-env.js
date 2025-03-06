@@ -3,6 +3,7 @@ export const checkRequiredEnv = () => {
       'NODE_ENV',
       'DB_HOST',
       'DB_USER',
+      'DB_PASSWORD',
       'DB_NAME',
       'DB_PORT',
       'JWT_SECRET'
@@ -19,7 +20,8 @@ export const checkRequiredEnv = () => {
     const dbConfigured = !!(
       process.env.DB_HOST && 
       process.env.DB_USER && 
-      process.env.DB_NAME
+      process.env.DB_NAME &&
+      process.env.DB_PASSWORD
     );
   
     if (!dbConfigured) {

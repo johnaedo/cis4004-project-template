@@ -1,11 +1,13 @@
 import mysql from 'mysql2/promise';
+import './dotenv.js';
 
+console.log(process.env);
 const isProduction = process.env.NODE_ENV === "production";
 
 const getConnectionConfig = () => {
   const config = {
     host: process.env.DB_HOST || 'localhost',
-    user: process.env.DB_USER || 'root',
+    user: process.env.DB_USER || 'budget_user',
     database: process.env.DB_NAME || 'budget_planner',
     port: parseInt(process.env.DB_PORT || '3306'),
   };

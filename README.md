@@ -16,7 +16,7 @@ A modern web application for managing personal finances, built with React, Node.
 ### Backend
 - HTTP Server: Node.js
 - Framework: Express.js
-  - Runs on port 3002
+  - Runs on port 3001
   - RESTful API endpoints
   - Manages database connections
   - CORS enabled for development/production
