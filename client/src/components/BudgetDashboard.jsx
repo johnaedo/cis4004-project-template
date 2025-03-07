@@ -4,6 +4,7 @@ import { getBudgetSummary, getTransactionSummary, getTransactions } from '../api
 import Spinner from './Spinner';
 import { ArrowUpCircle, ArrowDownCircle, TrendingUp, Target, AlertTriangle, CheckCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import TaxEstimator from './TaxEstimator';
 
 const BudgetDashboard = () => {
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
@@ -151,54 +152,62 @@ const BudgetDashboard = () => {
         </div>
       </div>
 
-      {/* Budget Progress */}
-      <div className="bg-white rounded-xl shadow-md p-6">
-        <h3 className="text-xl font-semibold mb-6">Budget Health</h3>
-        <div className="space-y-6">
-          {!budgetSummary || budgetSummary.length === 0 ? (
-            <div className="text-center py-8">
-              <Target className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-600 mb-2">No budgets set up yet</p>
-              <Link 
-                to="/budgets" 
-                className="text-indigo-600 hover:text-indigo-800 font-medium"
-              >
-                Set up your first budget →
-              </Link>
-            </div>
-          ) : (
-            budgetSummary.map((budget) => {
-              const health = getHealthStatus(budget.spent_amount, budget.budget_amount);
-              const HealthIcon = health.icon;
-              return (
-                <div key={budget.id} className="space-y-3">
-                  <div className="flex justify-between items-center">
-                    <div className="flex items-center gap-3">
-                      <div className="w-5 h-5 rounded-full" style={{ backgroundColor: budget.category_color }} />
-                      <span className="font-medium">{budget.category_name}</span>
+      {/* Two Column Layout for Budget Health and Tax Estimator */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Budget Progress */}
+        <div className="bg-white rounded-xl shadow-md p-6">
+          <h3 className="text-xl font-semibold mb-6">Budget Health</h3>
+          <div className="space-y-6">
+            {!budgetSummary || budgetSummary.length === 0 ? (
+              <div className="text-center py-8">
+                <Target className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                <p className="text-gray-600 mb-2">No budgets set up yet</p>
+                <Link 
+                  to="/budgets" 
+                  className="text-indigo-600 hover:text-indigo-800 font-medium"
+                >
+                  Set up your first budget →
+                </Link>
+              </div>
+            ) : (
+              budgetSummary.map((budget) => {
+                const health = getHealthStatus(budget.spent_amount, budget.budget_amount);
+                const HealthIcon = health.icon;
+                return (
+                  <div key={budget.id} className="space-y-3">
+                    <div className="flex justify-between items-center">
+                      <div className="flex items-center gap-3">
+                        <div className="w-5 h-5 rounded-full" style={{ backgroundColor: budget.category_color }} />
+                        <span className="font-medium">{budget.category_name}</span>
+                      </div>
+                      <div className="text-right">
+                        <span className="text-sm font-medium text-gray-900">
+                          ${Number(budget.spent_amount).toFixed(2)} / ${Number(budget.budget_amount).toFixed(2)}
+                        </span>
+                        <p className={`text-xs ${health.color}`}>{health.text}</p>
+                      </div>
                     </div>
-                    <div className="text-right">
-                      <span className="text-sm font-medium text-gray-900">
-                        ${Number(budget.spent_amount).toFixed(2)} / ${Number(budget.budget_amount).toFixed(2)}
-                      </span>
-                      <p className={`text-xs ${health.color}`}>{health.text}</p>
+                    <div className="w-full bg-gray-100 rounded-full h-3">
+                      <div
+                        className="h-3 rounded-full transition-all duration-500"
+                        style={{
+                          width: `${Math.min((Number(budget.spent_amount) / Number(budget.budget_amount)) * 100, 100)}%`,
+                          backgroundColor: budget.status === 'over' ? '#ef4444' : 
+                                         budget.status === 'warning' ? '#f59e0b' : 
+                                         budget.category_color
+                        }}
+                      ></div>
                     </div>
                   </div>
-                  <div className="w-full bg-gray-100 rounded-full h-3">
-                    <div
-                      className="h-3 rounded-full transition-all duration-500"
-                      style={{
-                        width: `${Math.min((Number(budget.spent_amount) / Number(budget.budget_amount)) * 100, 100)}%`,
-                        backgroundColor: budget.status === 'over' ? '#ef4444' : 
-                                       budget.status === 'warning' ? '#f59e0b' : 
-                                       budget.category_color
-                      }}
-                    ></div>
-                  </div>
-                </div>
-              );
-            })
-          )}
+                );
+              })
+            )}
+          </div>
+        </div>
+
+        {/* Tax Estimator */}
+        <div className="bg-white rounded-xl shadow-md p-6">
+          <TaxEstimator />
         </div>
       </div>
 
