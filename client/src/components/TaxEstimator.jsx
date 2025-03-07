@@ -28,19 +28,45 @@ const TaxEstimator = () => {
   };
 
   const addDeduction = (deduction) => {
-    setFormData(prev => ({
-      ...prev,
-      deductions: [...prev.deductions, deduction]
-    }));
+    const updatedFormData = {
+      ...formData,
+      deductions: [...formData.deductions, deduction]
+    };
+    setFormData(updatedFormData);
     setShowDeductionModal(false);
+    
+    // Automatically recalculate tax
+    const taxResults = calculateTotalTax({
+      income: Number(updatedFormData.income),
+      filingStatus: updatedFormData.filingStatus,
+      state: updatedFormData.state,
+      selfEmploymentIncome: Number(updatedFormData.selfEmploymentIncome),
+      deductions: updatedFormData.deductions,
+      credits: updatedFormData.credits,
+      previousYearIncome: updatedFormData.previousYearIncome
+    });
+    setEstimatedTax(taxResults);
   };
 
   const addCredit = (credit) => {
-    setFormData(prev => ({
-      ...prev,
-      credits: [...prev.credits, credit]
-    }));
+    const updatedFormData = {
+      ...formData,
+      credits: [...formData.credits, credit]
+    };
+    setFormData(updatedFormData);
     setShowCreditModal(false);
+    
+    // Automatically recalculate tax
+    const taxResults = calculateTotalTax({
+      income: Number(updatedFormData.income),
+      filingStatus: updatedFormData.filingStatus,
+      state: updatedFormData.state,
+      selfEmploymentIncome: Number(updatedFormData.selfEmploymentIncome),
+      deductions: updatedFormData.deductions,
+      credits: updatedFormData.credits,
+      previousYearIncome: updatedFormData.previousYearIncome
+    });
+    setEstimatedTax(taxResults);
   };
 
   const handleSubmit = (e) => {
@@ -297,6 +323,30 @@ const TaxEstimator = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-4">
               <div>
+                <h4 className="text-sm font-medium text-gray-500">Adjusted Gross Income</h4>
+                <p className="mt-1 text-2xl font-semibold text-gray-900">
+                  ${estimatedTax.adjustedGrossIncome.toFixed(2)}
+                </p>
+              </div>
+
+              <div>
+                <h4 className="text-sm font-medium text-gray-500">Deductions Applied</h4>
+                <p className="mt-1 text-xl font-semibold text-gray-900">
+                  ${estimatedTax.deductions.effective.toFixed(2)}
+                </p>
+                <p className="text-sm text-gray-500">
+                  Using {estimatedTax.deductions.effective === estimatedTax.deductions.standard ? 'standard' : 'itemized'} deduction
+                </p>
+              </div>
+
+              <div>
+                <h4 className="text-sm font-medium text-gray-500">Taxable Income</h4>
+                <p className="mt-1 text-2xl font-semibold text-gray-900">
+                  ${estimatedTax.taxableIncome.toFixed(2)}
+                </p>
+              </div>
+
+              <div>
                 <h4 className="text-sm font-medium text-gray-500">Federal Tax</h4>
                 <p className="mt-1 text-2xl font-semibold text-gray-900">
                   ${estimatedTax.federalTax.toFixed(2)}
@@ -343,6 +393,42 @@ const TaxEstimator = () => {
                   <p className="mt-1 text-xl font-semibold text-gray-900">
                     ${calculateWithholding().current.toFixed(2)}
                   </p>
+                </div>
+              )}
+
+              {estimatedTax.deductions.breakdown.length > 0 && (
+                <div>
+                  <h4 className="text-sm font-medium text-gray-500 mb-2">Itemized Deductions</h4>
+                  <div className="space-y-1">
+                    {estimatedTax.deductions.breakdown.map((deduction, index) => (
+                      <div key={index} className="flex justify-between text-sm">
+                        <span className="text-gray-600">{deduction.name}</span>
+                        <span className="text-gray-900">${deduction.amount.toFixed(2)}</span>
+                      </div>
+                    ))}
+                    <div className="border-t border-gray-200 mt-2 pt-2 flex justify-between text-sm font-medium">
+                      <span>Total Itemized</span>
+                      <span>${estimatedTax.deductions.itemized.toFixed(2)}</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {estimatedTax.credits.breakdown.length > 0 && (
+                <div>
+                  <h4 className="text-sm font-medium text-gray-500 mb-2">Tax Credits</h4>
+                  <div className="space-y-1">
+                    {estimatedTax.credits.breakdown.map((credit, index) => (
+                      <div key={index} className="flex justify-between text-sm">
+                        <span className="text-gray-600">{credit.name}</span>
+                        <span className="text-gray-900">${credit.amount.toFixed(2)}</span>
+                      </div>
+                    ))}
+                    <div className="border-t border-gray-200 mt-2 pt-2 flex justify-between text-sm font-medium">
+                      <span>Total Credits</span>
+                      <span>${estimatedTax.credits.total.toFixed(2)}</span>
+                    </div>
+                  </div>
                 </div>
               )}
             </div>

@@ -4,7 +4,7 @@ import { getBudgetSummary, getTransactionSummary, getTransactions } from '../api
 import Spinner from './Spinner';
 import { ArrowUpCircle, ArrowDownCircle, TrendingUp, Target, AlertTriangle, CheckCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import TaxEstimator from './TaxEstimator';
+import QuickTaxEstimator from './QuickTaxEstimator';
 
 const BudgetDashboard = () => {
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
@@ -112,7 +112,7 @@ const BudgetDashboard = () => {
       </div>
 
       {/* Overview Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
         <div className="bg-white rounded-xl shadow-md p-6 transform transition-all duration-200 hover:scale-105">
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-lg font-semibold text-gray-700">Income</h3>
@@ -150,11 +150,15 @@ const BudgetDashboard = () => {
           <p className="text-3xl font-bold text-purple-600">{savingsRate.toFixed(1)}%</p>
           <p className="text-sm text-gray-500 mt-2">Of total income</p>
         </div>
+
+        <div className="bg-white rounded-xl shadow-md p-6 transform transition-all duration-200 hover:scale-105">
+          <QuickTaxEstimator />
+        </div>
       </div>
 
-      {/* Two Column Layout for Budget Health and Tax Estimator */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Budget Progress */}
+      {/* Main Content Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-1 gap-6">
+        {/* Budget Health */}
         <div className="bg-white rounded-xl shadow-md p-6">
           <h3 className="text-xl font-semibold mb-6">Budget Health</h3>
           <div className="space-y-6">
@@ -172,7 +176,6 @@ const BudgetDashboard = () => {
             ) : (
               budgetSummary.map((budget) => {
                 const health = getHealthStatus(budget.spent_amount, budget.budget_amount);
-                const HealthIcon = health.icon;
                 return (
                   <div key={budget.id} className="space-y-3">
                     <div className="flex justify-between items-center">
@@ -205,49 +208,44 @@ const BudgetDashboard = () => {
           </div>
         </div>
 
-        {/* Tax Estimator */}
+        {/* Recent Transactions */}
         <div className="bg-white rounded-xl shadow-md p-6">
-          <TaxEstimator />
-        </div>
-      </div>
-
-      {/* Recent Transactions */}
-      <div className="bg-white rounded-xl shadow-md p-6">
-        <h3 className="text-xl font-semibold mb-6">Recent Transactions</h3>
-        <div className="space-y-4">
-          {recentTransactions?.map((transaction) => (
-            <div
-              key={transaction.id}
-              className="flex justify-between items-center p-4 hover:bg-gray-50 rounded-lg transition-colors duration-150"
-            >
-              <div className="flex items-center gap-4">
-                <div className="p-2 rounded-full" style={{ 
-                  backgroundColor: `${transaction.category_color}20`,
-                }}>
-                  {transaction.type === 'income' ? (
-                    <ArrowUpCircle className="w-5 h-5" style={{ color: transaction.category_color }} />
-                  ) : (
-                    <ArrowDownCircle className="w-5 h-5" style={{ color: transaction.category_color }} />
-                  )}
+          <h3 className="text-xl font-semibold mb-6">Recent Transactions</h3>
+          <div className="space-y-4">
+            {recentTransactions?.map((transaction) => (
+              <div
+                key={transaction.id}
+                className="flex justify-between items-center p-4 hover:bg-gray-50 rounded-lg transition-colors duration-150"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="p-2 rounded-full" style={{ 
+                    backgroundColor: `${transaction.category_color}20`,
+                  }}>
+                    {transaction.type === 'income' ? (
+                      <ArrowUpCircle className="w-5 h-5" style={{ color: transaction.category_color }} />
+                    ) : (
+                      <ArrowDownCircle className="w-5 h-5" style={{ color: transaction.category_color }} />
+                    )}
+                  </div>
+                  <div>
+                    <p className="font-medium text-gray-900">{transaction.description}</p>
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full" style={{ backgroundColor: transaction.category_color }} />
+                      <p className="text-sm text-gray-500">{transaction.category_name}</p>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <p className="font-medium text-gray-900">{transaction.description}</p>
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full" style={{ backgroundColor: transaction.category_color }} />
-                    <p className="text-sm text-gray-500">{transaction.category_name}</p>
+                <div className={`flex items-center gap-2 font-medium`}>
+                  <div className="p-2 rounded-full" style={{ 
+                    backgroundColor: transaction.type === 'income' ? '#dcfce7' : '#fee2e2',
+                    color: transaction.type === 'income' ? '#16a34a' : '#dc2626'
+                  }}>
+                    {transaction.type === 'income' ? '+' : '-'}${Math.abs(transaction.amount).toFixed(2)}
                   </div>
                 </div>
               </div>
-              <div className={`flex items-center gap-2 font-medium`}>
-                <div className="p-2 rounded-full" style={{ 
-                  backgroundColor: transaction.type === 'income' ? '#dcfce7' : '#fee2e2',
-                  color: transaction.type === 'income' ? '#16a34a' : '#dc2626'
-                }}>
-                  {transaction.type === 'income' ? '+' : '-'}${Math.abs(transaction.amount).toFixed(2)}
-                </div>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </div>

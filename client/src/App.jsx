@@ -6,6 +6,7 @@ import BudgetDashboard from './components/BudgetDashboard';
 import TransactionManager from './components/TransactionManager';
 import CategoryManager from './components/CategoryManager';
 import BudgetManager from './components/BudgetManager';
+import TaxEstimator from './components/TaxEstimator';
 import LoginModal from './components/LoginModal';
 import RegisterModal from './components/RegisterModal';
 import UserMenu from './components/UserMenu';
@@ -69,6 +70,12 @@ const App = () => {
                       >
                         Budgets
                       </Link>
+                      <Link
+                        to="/tax-estimator"
+                        className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md"
+                      >
+                        Tax Estimator
+                      </Link>
                     </div>
                   </div>
                   <div className="flex items-center h-full py-2">
@@ -112,6 +119,11 @@ const App = () => {
                 <Route path="/budgets" element={
                   <PrivateRoute>
                     <BudgetManager />
+                  </PrivateRoute>
+                } />
+                <Route path="/tax-estimator" element={
+                  <PrivateRoute>
+                    <TaxEstimator />
                   </PrivateRoute>
                 } />
               </Routes>

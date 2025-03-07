@@ -114,12 +114,17 @@ export const calculateTotalTax = ({
   previousYearIncome = null
 }) => {
   // Calculate total deductions
-  const totalDeductions = deductions.reduce((sum, d) => sum + d.amount, 0);
+  const totalItemizedDeductions = deductions.reduce((sum, d) => sum + d.amount, 0);
   const standardDeduction = STANDARD_DEDUCTIONS[filingStatus];
-  const effectiveDeduction = Math.max(totalDeductions, standardDeduction);
+  
+  // Use the larger of standard or itemized deductions
+  const effectiveDeduction = Math.max(totalItemizedDeductions, standardDeduction);
 
-  // Calculate taxable income
-  const taxableIncome = Math.max(0, income - effectiveDeduction);
+  // Calculate adjusted gross income (AGI)
+  const adjustedGrossIncome = income;
+  
+  // Calculate taxable income after all deductions
+  const taxableIncome = Math.max(0, adjustedGrossIncome - effectiveDeduction);
 
   // Calculate federal tax
   const federalBreakdown = calculateTaxBracketBreakdown(taxableIncome, filingStatus);
@@ -128,10 +133,10 @@ export const calculateTotalTax = ({
   // Calculate self-employment tax
   const seTax = calculateSelfEmploymentTax(selfEmploymentIncome);
 
-  // Calculate state tax
-  const stateTax = state ? calculateStateTax(taxableIncome, state, effectiveDeduction) : 0;
+  // Calculate state tax using AGI and allowing for state-specific deductions
+  const stateTax = state ? calculateStateTax(adjustedGrossIncome, state, effectiveDeduction) : 0;
 
-  // Apply credits
+  // Apply credits (dollar for dollar reduction in tax)
   const totalCredits = credits.reduce((sum, c) => sum + c.amount, 0);
 
   // Calculate final tax
@@ -139,6 +144,7 @@ export const calculateTotalTax = ({
   const finalTax = Math.max(0, totalTaxBeforeCredits - totalCredits);
 
   return {
+    adjustedGrossIncome,
     taxableIncome,
     federalTax,
     federalBreakdown,
@@ -147,11 +153,15 @@ export const calculateTotalTax = ({
     totalTax: finalTax,
     effectiveRate: (finalTax / income) * 100,
     deductions: {
-      itemized: totalDeductions,
+      itemized: totalItemizedDeductions,
       standard: standardDeduction,
-      effective: effectiveDeduction
+      effective: effectiveDeduction,
+      breakdown: deductions
     },
-    credits: totalCredits,
+    credits: {
+      total: totalCredits,
+      breakdown: credits
+    },
     yearOverYear: previousYearIncome ? {
       difference: finalTax - previousYearIncome.totalTax,
       percentageChange: ((finalTax - previousYearIncome.totalTax) / previousYearIncome.totalTax) * 100
