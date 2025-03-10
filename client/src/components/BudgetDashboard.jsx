@@ -5,6 +5,7 @@ import Spinner from './Spinner';
 import { ArrowUpCircle, ArrowDownCircle, TrendingUp, Target, AlertTriangle, CheckCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import QuickTaxEstimator from './QuickTaxEstimator';
+import CurrencyConverter from './CurrencyConverter';
 
 const BudgetDashboard = () => {
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
@@ -112,7 +113,8 @@ const BudgetDashboard = () => {
       </div>
 
       {/* Overview Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-6 gap-6">
+        {/* Income Card */}
         <div className="bg-white rounded-xl shadow-md p-6 transform transition-all duration-200 hover:scale-105">
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-lg font-semibold text-gray-700">Income</h3>
@@ -122,6 +124,7 @@ const BudgetDashboard = () => {
           <p className="text-sm text-gray-500 mt-2">Monthly earnings</p>
         </div>
 
+        {/* Expenses Card */}
         <div className="bg-white rounded-xl shadow-md p-6 transform transition-all duration-200 hover:scale-105">
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-lg font-semibold text-gray-700">Expenses</h3>
@@ -131,6 +134,7 @@ const BudgetDashboard = () => {
           <p className="text-sm text-gray-500 mt-2">Monthly spending</p>
         </div>
 
+        {/* Balance Card */}
         <div className="bg-white rounded-xl shadow-md p-6 transform transition-all duration-200 hover:scale-105">
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-lg font-semibold text-gray-700">Balance</h3>
@@ -142,6 +146,7 @@ const BudgetDashboard = () => {
           <p className="text-sm text-gray-500 mt-2">Net balance</p>
         </div>
 
+        {/* Savings Rate Card */}
         <div className="bg-white rounded-xl shadow-md p-6 transform transition-all duration-200 hover:scale-105">
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-lg font-semibold text-gray-700">Savings Rate</h3>
@@ -151,8 +156,14 @@ const BudgetDashboard = () => {
           <p className="text-sm text-gray-500 mt-2">Of total income</p>
         </div>
 
+        {/* Tax Estimator Card */}
         <div className="bg-white rounded-xl shadow-md p-6 transform transition-all duration-200 hover:scale-105">
           <QuickTaxEstimator />
+        </div>
+
+        {/* New Currency Converter Card - spans 2 columns */}
+        <div className="md:col-span-2">
+          <CurrencyConverter />
         </div>
       </div>
 
