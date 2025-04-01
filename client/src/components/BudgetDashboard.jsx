@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { getBudgetSummary } from '../api';
+import { getBudgetSummary, getTransactionSummary, getTransactions } from '../api';
 import Spinner from './Spinner';
-import { Target, Trophy, TrendingUp } from 'lucide-react';
+import { Target, Trophy, TrendingUp, ArrowUpCircle, ArrowDownCircle, AlertTriangle, CheckCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import SavingsGoals from './SavingsGoals';
 import QuickTaxEstimator from './QuickTaxEstimator';
@@ -23,9 +23,39 @@ const BudgetDashboard = () => {
     }
   });
 
-  if (isLoadingBudgets) {
+  const { data: transactionSummary, isLoading: isLoadingTransactions } = useQuery({
+    queryKey: ['transactionSummary', selectedMonth, selectedYear],
+    queryFn: () => {
+      // Get the last day of the selected month
+      const lastDay = new Date(selectedYear, selectedMonth, 0).getDate();
+      return getTransactionSummary({
+        startDate: `${selectedYear}-${selectedMonth.toString().padStart(2, '0')}-01`,
+        endDate: `${selectedYear}-${selectedMonth.toString().padStart(2, '0')}-${lastDay}`
+      });
+    }
+  });
+
+  const { data: recentTransactions, isLoading: isLoadingRecent } = useQuery({
+    queryKey: ['recentTransactions'],
+    queryFn: () => getTransactions({ limit: 5 })
+  });
+
+  if (isLoadingBudgets || isLoadingTransactions || isLoadingRecent) {
     return <Spinner />;
   }
+
+  const totalIncome = Number(transactionSummary?.find(s => s.type === 'income')?.total_amount || 0);
+  const totalExpenses = Number(transactionSummary?.find(s => s.type === 'expense')?.total_amount || 0);
+  const balance = totalIncome - totalExpenses;
+  const savingsRate = totalIncome > 0 ? ((totalIncome - totalExpenses) / totalIncome) * 100 : 0;
+
+  const getHealthStatus = (spent, budget) => {
+    const ratio = Number(spent) / Number(budget);
+    if (ratio > 1) return { icon: AlertTriangle, color: 'text-red-500', text: 'Over Budget' };
+    if (ratio > 0.9) return { icon: AlertTriangle, color: 'text-yellow-500', text: 'Near Limit' };
+    if (ratio > 0.7) return { icon: Target, color: 'text-blue-500', text: 'On Track' };
+    return { icon: CheckCircle, color: 'text-green-500', text: 'Healthy' };
+  };
 
   const months = [
     'January', 'February', 'March', 'April', 'May', 'June',
