@@ -6,6 +6,7 @@ import { ArrowUpCircle, ArrowDownCircle, TrendingUp, Target, AlertTriangle, Chec
 import { Link } from 'react-router-dom';
 import QuickTaxEstimator from './QuickTaxEstimator';
 import CurrencyConverter from './CurrencyConverter';
+import ExpenseTracker from './ExpenseTracker';
 
 const BudgetDashboard = () => {
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
@@ -257,6 +258,12 @@ const BudgetDashboard = () => {
               </div>
             ))}
           </div>
+        </div>
+        
+        {/* Expense Tracker */}
+        <div className="bg-white rounded-xl shadow-md p-6">
+          <h3 className="text-xl font-semibold mb-6">Expense Tracking</h3>
+          <ExpenseTracker selectedMonth={selectedMonth} selectedYear={selectedYear} />
         </div>
       </div>
     </div>
