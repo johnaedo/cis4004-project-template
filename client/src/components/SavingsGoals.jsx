@@ -156,8 +156,8 @@ const SavingsGoals = () => {
                     }}
                   />
                   <button
-                    onClick={() => {
-                      const input = e.target.previousSibling;
+                    onClick={(event) => {
+                      const input = event.target.previousSibling;
                       handleContribution(goal.id, input.value);
                       input.value = '';
                     }}
