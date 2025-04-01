@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Target, Trophy, Sparkles, AlertCircle, Plus } from 'lucide-react';
+import { Target, Trophy, Sparkles, AlertCircle, Plus, Edit2 } from 'lucide-react';
 
 const SavingsGoals = () => {
   // Set future dates for all goals
@@ -58,12 +58,15 @@ const SavingsGoals = () => {
     }
   ]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
   const [newGoal, setNewGoal] = useState({
+    id: null,
     name: '',
     target: '',
     deadline: '',
     priority: 'medium',
-    icon: '🎯'
+    icon: '🎯',
+    current: 0
   });
 
   const getPriorityColor = (priority) => {
@@ -100,7 +103,17 @@ const SavingsGoals = () => {
     }));
   };
 
-  const handleAddGoal = (e) => {
+  const handleEditGoal = (goal) => {
+    setIsEditing(true);
+    setNewGoal({
+      ...goal,
+      target: goal.target.toString(),
+      deadline: goal.deadline
+    });
+    setIsModalOpen(true);
+  };
+
+  const handleSubmit = (e) => {
     e.preventDefault();
     const target = parseFloat(newGoal.target);
     const milestones = [
@@ -110,22 +123,38 @@ const SavingsGoals = () => {
       target
     ];
 
-    const goal = {
-      id: Date.now(),
-      ...newGoal,
-      target,
-      current: 0,
-      milestones,
-    };
+    if (isEditing) {
+      setGoals(goals.map(goal => 
+        goal.id === newGoal.id 
+          ? { 
+              ...newGoal, 
+              target,
+              milestones,
+              current: Math.min(newGoal.current, target) // Ensure current doesn't exceed new target
+            }
+          : goal
+      ));
+    } else {
+      const goal = {
+        id: Date.now(),
+        ...newGoal,
+        target,
+        current: 0,
+        milestones,
+      };
+      setGoals([...goals, goal]);
+    }
 
-    setGoals([...goals, goal]);
     setNewGoal({
+      id: null,
       name: '',
       target: '',
       deadline: '',
       priority: 'medium',
-      icon: '🎯'
+      icon: '🎯',
+      current: 0
     });
+    setIsEditing(false);
     setIsModalOpen(false);
   };
 
@@ -141,7 +170,19 @@ const SavingsGoals = () => {
             <span className="text-sm text-gray-600">Track your progress</span>
           </div>
           <button
-            onClick={() => setIsModalOpen(true)}
+            onClick={() => {
+              setIsEditing(false);
+              setNewGoal({
+                id: null,
+                name: '',
+                target: '',
+                deadline: '',
+                priority: 'medium',
+                icon: '🎯',
+                current: 0
+              });
+              setIsModalOpen(true);
+            }}
             className="flex items-center gap-2 px-4 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600 transition-colors"
           >
             <Plus className="w-4 h-4" />
@@ -175,9 +216,17 @@ const SavingsGoals = () => {
                       </span>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <p className="text-sm text-gray-600">Target: ${goal.target.toLocaleString()}</p>
-                    <p className="text-xs text-gray-500">{daysLeft} days left</p>
+                  <div className="flex items-center gap-4">
+                    <button
+                      onClick={() => handleEditGoal(goal)}
+                      className="p-2 text-gray-500 hover:text-teal-600 transition-colors"
+                    >
+                      <Edit2 className="w-4 h-4" />
+                    </button>
+                    <div className="text-right">
+                      <p className="text-sm text-gray-600">Target: ${goal.target.toLocaleString()}</p>
+                      <p className="text-xs text-gray-500">{daysLeft} days left</p>
+                    </div>
                   </div>
                 </div>
 
@@ -253,12 +302,14 @@ const SavingsGoals = () => {
         </div>
       )}
 
-      {/* Add Goal Modal */}
+      {/* Add/Edit Goal Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
           <div className="bg-white p-6 rounded-lg w-full max-w-md">
-            <h3 className="text-xl font-semibold mb-4">Add New Savings Goal</h3>
-            <form onSubmit={handleAddGoal} className="space-y-4">
+            <h3 className="text-xl font-semibold mb-4">
+              {isEditing ? 'Edit Savings Goal' : 'Add New Savings Goal'}
+            </h3>
+            <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700">Goal Name</label>
                 <input
@@ -322,7 +373,19 @@ const SavingsGoals = () => {
               <div className="flex justify-end gap-2 mt-6">
                 <button
                   type="button"
-                  onClick={() => setIsModalOpen(false)}
+                  onClick={() => {
+                    setIsModalOpen(false);
+                    setIsEditing(false);
+                    setNewGoal({
+                      id: null,
+                      name: '',
+                      target: '',
+                      deadline: '',
+                      priority: 'medium',
+                      icon: '🎯',
+                      current: 0
+                    });
+                  }}
                   className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg"
                 >
                   Cancel
@@ -331,7 +394,7 @@ const SavingsGoals = () => {
                   type="submit"
                   className="px-4 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600"
                 >
-                  Create Goal
+                  {isEditing ? 'Save Changes' : 'Create Goal'}
                 </button>
               </div>
             </form>
