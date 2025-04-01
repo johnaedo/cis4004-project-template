@@ -2,13 +2,26 @@ import React, { useState } from 'react';
 import { Target, Trophy, Sparkles, AlertCircle, Plus } from 'lucide-react';
 
 const SavingsGoals = () => {
+  // Set future dates for all goals
+  const nextYear = new Date();
+  nextYear.setFullYear(nextYear.getFullYear() + 1);
+  
+  const sixMonthsLater = new Date();
+  sixMonthsLater.setMonth(sixMonthsLater.getMonth() + 6);
+  
+  const threeMonthsLater = new Date();
+  threeMonthsLater.setMonth(threeMonthsLater.getMonth() + 3);
+  
+  const oneMonthLater = new Date();
+  oneMonthLater.setMonth(oneMonthLater.getMonth() + 1);
+  
   const [goals, setGoals] = useState([
     {
       id: 1,
       name: "Emergency Fund",
       target: 10000,
       current: 3500,
-      deadline: "2024-12-31",
+      deadline: nextYear.toISOString().split('T')[0],
       priority: "high",
       milestones: [2500, 5000, 7500, 10000],
       icon: "🛡️"
@@ -18,7 +31,7 @@ const SavingsGoals = () => {
       name: "Vacation Fund",
       target: 5000,
       current: 2000,
-      deadline: "2024-08-01",
+      deadline: sixMonthsLater.toISOString().split('T')[0],
       priority: "medium",
       milestones: [1000, 2500, 3750, 5000],
       icon: "✈️"
@@ -28,10 +41,20 @@ const SavingsGoals = () => {
       name: "New Car",
       target: 25000,
       current: 5000,
-      deadline: "2025-06-30",
+      deadline: threeMonthsLater.toISOString().split('T')[0],
       priority: "low",
       milestones: [5000, 10000, 15000, 25000],
       icon: "🚗"
+    },
+    {
+      id: 4,
+      name: "New house",
+      target: 22222222,
+      current: 0,
+      deadline: oneMonthLater.toISOString().split('T')[0],
+      priority: "high",
+      milestones: [5555555.5, 11111111, 16666666.5, 22222222],
+      icon: "🏠"
     }
   ]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -56,7 +79,9 @@ const SavingsGoals = () => {
     const today = new Date();
     const deadlineDate = new Date(deadline);
     const diffTime = deadlineDate - today;
-    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const days = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    // Return 0 if the deadline has passed (negative days)
+    return days > 0 ? days : 0;
   };
 
   const calculateNextMilestone = (current, milestones) => {
