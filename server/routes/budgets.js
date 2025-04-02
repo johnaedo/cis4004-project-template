@@ -140,4 +140,52 @@ router.delete('/:id', authenticateToken, async (req, res) => {
   }
 });
 
+// Get transactions for a specific budget period
+router.get('/:id/transactions', authenticateToken, async (req, res) => {
+  try {
+    // First get the budget details
+    const [budget] = await pool.query(
+      `SELECT b.*, c.name as category_name, c.type as category_type, c.color as category_color 
+       FROM budgets b 
+       LEFT JOIN budget_categories c ON b.category_id = c.id 
+       WHERE b.id = ? AND b.user_id = ?`,
+      [req.params.id, req.user.id]
+    );
+
+    if (!budget.length) {
+      return res.status(404).json({ error: "Budget not found" });
+    }
+
+    // Get transactions for the budget period
+    const [transactions] = await pool.query(
+      `SELECT 
+         t.date as transaction_date,
+         SUM(CASE WHEN t.type = 'income' THEN t.amount ELSE 0 END) as income,
+         SUM(CASE WHEN t.type = 'expense' THEN t.amount ELSE 0 END) as expenses
+       FROM transactions t
+       WHERE t.user_id = ?
+         AND t.date BETWEEN ? AND ?
+       GROUP BY t.date
+       ORDER BY t.date ASC`,
+      [req.user.id, budget[0].start_date, budget[0].end_date]
+    );
+
+    // Calculate savings for each day
+    const dailyData = transactions.map(day => ({
+      month: day.transaction_date,
+      income: parseFloat(day.income) || 0,
+      expenses: parseFloat(day.expenses) || 0,
+      savings: (parseFloat(day.income) || 0) - (parseFloat(day.expenses) || 0)
+    }));
+
+    res.json({
+      budget: budget[0],
+      transactions: dailyData
+    });
+  } catch (error) {
+    console.error('Budget transactions error:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 export default router; 
