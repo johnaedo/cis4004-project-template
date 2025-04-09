@@ -28,7 +28,6 @@ A modern web application for managing personal finances, built with React, Node.
   - Structured with foreign key relationships
 
 ### External APIs/Services
-- ExchangeRate API - Used for real-time currency conversion (https://www.exchangerate-api.com/)
 - Recharts - Data visualization library for creating charts and graphs
 - TailwindCSS - Utility-first CSS framework for styling
 - React Query - Data fetching and state management
@@ -55,8 +54,8 @@ Before you begin, ensure you have the following installed on your machine:
 
 1. **Clone the repository**
    ```bash
-   git clone [repository-url]
-   cd budget-planner
+   git clone https://github.com/your-username/cis-4004-project.git
+   cd cis-4004-project
    ```
 
 2. **Install dependencies**
@@ -98,10 +97,114 @@ Before you begin, ensure you have the following installed on your machine:
    # DB_PASSWORD= (leave empty if no password set)
    ```
 
-   - In the client directory, create a `.env` file:
-   ```env
-   VITE_EXCHANGE_RATE_API_KEY=your_exchange_rate_api_key
+5. **Initialize the database**
+   ```bash
+   # From the server directory
+   node config/reset.js
    ```
 
-5. **Initialize the database**
+### Running the Application
+
+1. **Start the backend server**
+   ```bash
+   # From the root directory
+   npm run dev:server
    ```
+   The server will start on http://localhost:3001
+
+2. **Start the frontend development server**
+   ```bash
+   # In a new terminal, from the root directory
+   npm run dev:client
+   ```
+   The application will open in your browser at http://localhost:3000
+
+## 🎯 Features
+
+- 👤 User authentication (register/login)
+- 💹 Budget tracking and management
+- 📊 Transaction history
+- 🏷️ Custom budget categories
+- 📱 Responsive design
+- 💰 Savings goals tracking
+- 💲 Currency converter
+- 🧮 Tax estimator
+
+## 🔧 Troubleshooting
+
+1. **Port already in use**
+   ```bash
+   # Check which process is using the port
+   lsof -i :3000-3001
+   
+   # Kill the process using the specific port
+   kill -9 [PID]
+   ```
+
+2. **MySQL Connection Issues**
+   - Ensure MySQL service is running
+   - Verify database name and credentials in `.env`
+   - Check if database exists: `mysql -u root -e "SHOW DATABASES;"`
+
+3. **JWT Verification Error**
+   - If you encounter 500 errors with categories and budgets not loading, you may have an expired JWT token
+   - Try logging out and logging back in to refresh your token
+   - Check server logs for "JWT verification error" messages
+
+4. **Node.js Version Mismatch**
+   - Use `nvm` (Node Version Manager) to switch to the correct version:
+   ```bash
+   nvm install 18
+   nvm use 18
+   ```
+
+5. **Missing Dependencies**
+   - If you encounter errors about missing modules, run:
+   ```bash
+   npm install recharts
+   ```
+
+## 📁 Project Structure
+
+```
+budget-planner/
+├── client/                 # Frontend React application
+│   ├── src/
+│   │   ├── components/    # React components
+│   │   ├── context/      # Context providers
+│   │   └── api/          # API integration
+│   └── package.json
+├── server/                # Backend Node.js application
+│   ├── controllers/      # Business logic
+│   ├── routes/          # API routes
+│   ├── middleware/      # Custom middleware
+│   ├── config/         # Configuration files including reset.js
+│   └── package.json
+└── package.json
+```
+
+## 🤝 Contributing
+
+1. Create a new branch for your feature
+2. Make your changes
+3. Test thoroughly
+4. Create a pull request with a clear description
+
+## 🤖 AI Usage Citation
+
+### Claude.ai (Claude 3.7 Sonnet & Claude 3.5 Sonnet)
+
+AI was extensively used in this project:
+
+- **Frontend Development**: All React components in the `client/src/components/` directory were created and structured with AI assistance.
+
+- **Backend Structure**: AI provided templates and structure for the backend Express.js server, including controllers, routes, and middleware.
+
+- **Troubleshooting**: AI assisted with debugging issues, particularly authentication problems and component logic.
+
+- **Integration**: AI helped with integrating third-party libraries such as recharts for data visualization.
+
+The foundation of both the frontend and backend architecture was significantly influenced by AI-generated code, which was then customized and extended to meet the specific requirements of the application.
+
+---
+Happy budgeting! 🎉 
