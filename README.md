@@ -4,11 +4,11 @@ A modern web application for managing personal finances, built with React, Node.
 
 ## Technical Stack
 
-![Screenshot 2025-02-15 at 2 12 52 AM](https://github.com/user-attachments/assets/132de664-3e6f-4ccb-973f-2baa8d335052)
+![Screenshot 2025-02-15 at 2 12 52 AM](https://github.com/user-attachments/assets/132de664-3e6f-4ccb-973f-2baa8d335052)
 
 ### Frontend
 - Framework: React.js with Vite
-  - Runs on port 5173 (Vite's default port)
+  - Runs on port 3000 in development
   - Uses React Router for client-side routing
   - Styled with Tailwind CSS
   - State management with React Query
@@ -16,7 +16,7 @@ A modern web application for managing personal finances, built with React, Node.
 ### Backend
 - HTTP Server: Node.js
 - Framework: Express.js
-  - Runs on port 3002
+  - Runs on port 3001
   - RESTful API endpoints
   - Manages database connections
   - CORS enabled for development/production
@@ -37,7 +37,6 @@ A modern web application for managing personal finances, built with React, Node.
   - Protected routes with middleware
 
 ## 🚀 Getting Started
-
 
 ### Prerequisites
 
@@ -86,7 +85,7 @@ Before you begin, ensure you have the following installed on your machine:
    - In the server directory, create a `.env` file:
    ```env
    NODE_ENV=development
-   PORT=3002
+   PORT=3001
    JWT_SECRET=your_jwt_secret_here
    DB_HOST=localhost
    DB_USER=root
@@ -107,14 +106,14 @@ Before you begin, ensure you have the following installed on your machine:
    # From the root directory
    npm run dev:server
    ```
-   The server will start on http://localhost:3002
+   The server will start on http://localhost:3001
 
 2. **Start the frontend development server**
    ```bash
    # In a new terminal, from the root directory
    npm run dev:client
    ```
-   The application will open in your browser at http://localhost:5173
+   The application will open in your browser at http://localhost:3000
 
 ## 🎯 Features
 
@@ -123,13 +122,18 @@ Before you begin, ensure you have the following installed on your machine:
 - 📊 Transaction history
 - 🏷️ Custom budget categories
 - 📱 Responsive design
+- 💰 Savings goals tracking
+- 💲 Currency converter
+- 🧮 Tax estimator
 
 ## 🔧 Troubleshooting
 
 1. **Port already in use**
    ```bash
-   # Kill the process using port 3002
-   lsof -i :3002
+   # Check which process is using the port
+   lsof -i :3000-3001
+   
+   # Kill the process using the specific port
    kill -9 [PID]
    ```
 
@@ -138,11 +142,22 @@ Before you begin, ensure you have the following installed on your machine:
    - Verify database name and credentials in `.env`
    - Check if database exists: `mysql -u root -e "SHOW DATABASES;"`
 
-3. **Node.js Version Mismatch**
+3. **JWT Verification Error**
+   - If you encounter 500 errors with categories and budgets not loading, you may have an expired JWT token
+   - Try logging out and logging back in to refresh your token
+   - Check server logs for "JWT verification error" messages
+
+4. **Node.js Version Mismatch**
    - Use `nvm` (Node Version Manager) to switch to the correct version:
    ```bash
    nvm install 18
    nvm use 18
+   ```
+
+5. **Missing Dependencies**
+   - If you encounter errors about missing modules, run:
+   ```bash
+   npm install recharts
    ```
 
 ## 📁 Project Structure
@@ -170,6 +185,22 @@ budget-planner/
 2. Make your changes
 3. Test thoroughly
 4. Create a pull request with a clear description
+
+## 🤖 AI Usage Citation
+
+### Claude.ai (Claude 3.7 Sonnet & Claude 3.5 Sonnet)
+
+AI was extensively used in this project:
+
+- **Frontend Development**: All React components in the `client/src/components/` directory were created and structured with AI assistance.
+
+- **Backend Structure**: AI provided templates and structure for the backend Express.js server, including controllers, routes, and middleware.
+
+- **Troubleshooting**: AI assisted with debugging issues, particularly authentication problems and component logic.
+
+- **Integration**: AI helped with integrating third-party libraries such as recharts for data visualization.
+
+The foundation of both the frontend and backend architecture was significantly influenced by AI-generated code, which was then customized and extended to meet the specific requirements of the application.
 
 ---
 Happy budgeting! 🎉 
