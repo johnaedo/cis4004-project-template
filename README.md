@@ -184,13 +184,6 @@ budget-planner/
 └── package.json
 ```
 
-## 🤝 Contributing
-
-1. Create a new branch for your feature
-2. Make your changes
-3. Test thoroughly
-4. Create a pull request with a clear description
-
 ## 🤖 AI Usage Citation
 
 ### Claude.ai (Claude 3.7 Sonnet & Claude 3.5 Sonnet)
