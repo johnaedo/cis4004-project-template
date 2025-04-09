@@ -28,6 +28,7 @@ A modern web application for managing personal finances, built with React, Node.
   - Structured with foreign key relationships
 
 ### External APIs/Services
+- ExchangeRate API - Used for real-time currency conversion (https://www.exchangerate-api.com/)
 - Recharts - Data visualization library for creating charts and graphs
 - TailwindCSS - Utility-first CSS framework for styling
 - React Query - Data fetching and state management
@@ -54,8 +55,8 @@ Before you begin, ensure you have the following installed on your machine:
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/your-username/cis-4004-project.git
-   cd cis-4004-project
+   git clone [repository-url]
+   cd budget-planner
    ```
 
 2. **Install dependencies**
