@@ -47,6 +47,7 @@ export const createBudget = (budgetData) => api.post('/budgets', budgetData);
 export const updateBudget = ([id, budgetData]) => api.put(`/budgets/${id}`, budgetData);
 export const deleteBudget = (id) => api.delete(`/budgets/${id}`);
 export const getBudgetSummary = (params) => api.get('/budgets/summary', { params });
+export const getBudgetTransactions = (id) => api.get(`/budgets/${id}/transactions`);
 
 // Error handler
 api.interceptors.response.use(

@@ -3,10 +3,12 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getBudgets, createBudget, updateBudget, deleteBudget } from '../api';
 import { getCategories } from '../api';
 import Spinner from './Spinner';
+import BudgetDetailsModal from './BudgetDetailsModal';
 
 const BudgetManager = () => {
   const queryClient = useQueryClient();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [selectedBudget, setSelectedBudget] = useState(null);
   const [formData, setFormData] = useState({
     category_id: '',
@@ -90,6 +92,11 @@ const BudgetManager = () => {
     }
   };
 
+  const handleViewDetails = (budget) => {
+    setSelectedBudget(budget);
+    setIsDetailsModalOpen(true);
+  };
+
   if (isLoadingBudgets || isLoadingCategories) {
     return <Spinner />;
   }
@@ -122,6 +129,12 @@ const BudgetManager = () => {
               </p>
             </div>
             <div className="flex gap-2">
+              <button
+                onClick={() => handleViewDetails(budget)}
+                className="px-3 py-1 text-blue-600 hover:bg-blue-50 rounded"
+              >
+                View Details
+              </button>
               <button
                 onClick={() => handleEdit(budget)}
                 className="px-3 py-1 text-indigo-600 hover:bg-indigo-50 rounded"
@@ -213,6 +226,17 @@ const BudgetManager = () => {
             </form>
           </div>
         </div>
+      )}
+
+      {/* Budget Details Modal */}
+      {isDetailsModalOpen && selectedBudget && (
+        <BudgetDetailsModal
+          budget={selectedBudget}
+          onClose={() => {
+            setIsDetailsModalOpen(false);
+            setSelectedBudget(null);
+          }}
+        />
       )}
     </div>
   );

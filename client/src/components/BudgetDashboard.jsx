@@ -2,8 +2,11 @@ import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getBudgetSummary, getTransactionSummary, getTransactions } from '../api';
 import Spinner from './Spinner';
-import { ArrowUpCircle, ArrowDownCircle, TrendingUp, Target, AlertTriangle, CheckCircle } from 'lucide-react';
+import { Target, Trophy, TrendingUp, ArrowUpCircle, ArrowDownCircle, AlertTriangle, CheckCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import SavingsGoals from './SavingsGoals';
+import QuickTaxEstimator from './QuickTaxEstimator';
+import CurrencyConverter from './CurrencyConverter';
 
 const BudgetDashboard = () => {
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
@@ -110,6 +113,19 @@ const BudgetDashboard = () => {
         </div>
       </div>
 
+      {/* Utility Tools Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Tax Estimator Card */}
+        <div className="bg-white rounded-xl shadow-md p-6">
+          <QuickTaxEstimator />
+        </div>
+
+        {/* Currency Converter Card */}
+        <div className="bg-white rounded-xl shadow-md p-6">
+          <CurrencyConverter />
+        </div>
+      </div>
+
       {/* Overview Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div className="bg-white rounded-xl shadow-md p-6 transform transition-all duration-200 hover:scale-105">
@@ -202,45 +218,8 @@ const BudgetDashboard = () => {
         </div>
       </div>
 
-      {/* Recent Transactions */}
-      <div className="bg-white rounded-xl shadow-md p-6">
-        <h3 className="text-xl font-semibold mb-6">Recent Transactions</h3>
-        <div className="space-y-4">
-          {recentTransactions?.map((transaction) => (
-            <div
-              key={transaction.id}
-              className="flex justify-between items-center p-4 hover:bg-gray-50 rounded-lg transition-colors duration-150"
-            >
-              <div className="flex items-center gap-4">
-                <div className="p-2 rounded-full" style={{ 
-                  backgroundColor: `${transaction.category_color}20`,
-                }}>
-                  {transaction.type === 'income' ? (
-                    <ArrowUpCircle className="w-5 h-5" style={{ color: transaction.category_color }} />
-                  ) : (
-                    <ArrowDownCircle className="w-5 h-5" style={{ color: transaction.category_color }} />
-                  )}
-                </div>
-                <div>
-                  <p className="font-medium text-gray-900">{transaction.description}</p>
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full" style={{ backgroundColor: transaction.category_color }} />
-                    <p className="text-sm text-gray-500">{transaction.category_name}</p>
-                  </div>
-                </div>
-              </div>
-              <div className={`flex items-center gap-2 font-medium`}>
-                <div className="p-2 rounded-full" style={{ 
-                  backgroundColor: transaction.type === 'income' ? '#dcfce7' : '#fee2e2',
-                  color: transaction.type === 'income' ? '#16a34a' : '#dc2626'
-                }}>
-                  {transaction.type === 'income' ? '+' : '-'}${Math.abs(transaction.amount).toFixed(2)}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
+      {/* Savings Goals */}
+      <SavingsGoals />
     </div>
   );
 };
